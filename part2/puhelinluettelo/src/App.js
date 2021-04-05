@@ -61,56 +61,57 @@ const App = () => {
   }, [])
 
   const addEntry = event => {
+    let found = false
     event.preventDefault()
     const newEntry = {
       name: newName,
       number: newNumber
     }
-
+    
     if (persons.some(person => person.name === newName)) {
+      found = true
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         const target = persons.find(p => p.name === newName)
-        setNewName('')
-        setNewNumber('')
         personService
           .update(target.id, newEntry)
           .then(updated => {
             setPersons(persons.map(person => person.name === target.name ? updated : person))
+            setMessage(`The number of ${newName} was updated`)
           })
           .catch(error => {
             setMessage(`Information of ${target.name} has already been removed from the server`)
             setPersons(persons.filter(p => p.id !== target.id))
             setError(true)
-            setTimeout(() => {
-              setMessage(null)
-              setError(false)
-            }, 5000)
-            return
           })
+        setTimeout(() => {
+          setMessage(null)
+          if (error) setError(false)
+        }, 5000)
       }
-      setMessage(`The number of ${newName} was updated`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-      return
-    }
 
-    personService
-      .create(newEntry)
-      .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-      })
+    }
     setNewName('')
     setNewNumber('')
-    setMessage(`Added ${newName}`)
-    setTimeout(() => {
-      setMessage(null)
-    }, 5000)
+    if (!found) {
+      personService
+        .create(newEntry)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setMessage(`Added ${newName}`)
+        })
+        .catch(error => {
+          setMessage(error.response.data.error)
+          setError(true)
+        })
+      setTimeout(() => {
+        setMessage(null)
+        if (error) setError(false)
+      }, 5000)
+    }
   }
 
   const deleteEntry = event => {
-    const id = parseInt(event.target.id, 10)
-    const person = persons.find(p => p.id === id)
+    const person = persons.find(p => p.id === event.target.id)
     if (window.confirm(`Delete ${person.name}?`)) {
       personService.remove(person.id)
       setPersons(persons.filter(p => p.id !== person.id))
