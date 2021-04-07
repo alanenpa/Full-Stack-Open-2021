@@ -1,0 +1,9 @@
+POST http://localhost:3002/api/blogs/
+Content-Type: application/json
+
+{
+    "title": "Ruokablogi",
+    "author": "Hans Välimäki",
+    "url": "safka.net",
+    "likes": 1053
+}
