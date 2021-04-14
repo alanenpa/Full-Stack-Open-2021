@@ -1,4 +1,6 @@
 node_modules/
 .history/
+requests/
 workdir/
 part3/
+.env
