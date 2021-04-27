@@ -31,10 +31,12 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
   user.blogs = user.blogs.concat(savedEntry._id)
   await user.save()
 
+  await savedEntry.populate('user', { username: 1, name: 1, id: 1 }).execPopulate()
+
   response.json(savedEntry.toJSON())
 })
 
-blogsRouter.delete('/:id', userExtractor, async (request, response, next) => {
+blogsRouter.delete('/:id', userExtractor, async (request, response) => {
   const token = request.token
   const user = request.user
   if (!token || user === null) {
@@ -48,39 +50,18 @@ blogsRouter.delete('/:id', userExtractor, async (request, response, next) => {
 
   if (user._id.toString() === blog.user.toString()) {
     await Blog.findByIdAndRemove(blog._id)
+    user.blogs = user.blogs.filter(b => b.id.toString() !== request.params.id.toString())
     response.status(204).end()
   } else {
     response.status(401).json({ error: 'unauthorized user' })
   }
 })
 
-blogsRouter.put('/:id', userExtractor, async (request, response, next) => {
-  const token = request.token
-  const user = request.user
-  if (!token || user === null) {
-    return response.status(401).json({ error: 'token missing or invalid' })
-  }
-  const body = request.body
-
-  const entry = {
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes,
-    user: user._id
-  }
-  const blog = await Blog.findById(request.params.id)
-
-  if (blog === null) {
-    return response.status(404).json({ error: `blog entry with id ${request.params.id} not found`})
-  }
-
-  if (user._id.toString() === blog.user.toString()) {
-    const updatedEntry = await Blog.findByIdAndUpdate(request.params.id, entry, { new: true })
-    response.json(updatedEntry)
-  } else {
-    response.status(401).json({ error: 'unauthorized user' })
-  }
+blogsRouter.put('/:id', userExtractor, async (request, response) => {
+  const blog = request.body
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+  await updatedBlog.populate('user', { username: 1, name: 1, id: 1 }).execPopulate()
+  response.json(updatedBlog)
 })
 
 module.exports = blogsRouter

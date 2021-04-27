@@ -1,0 +1,17 @@
+.notification {
+  color: blue;
+  padding: 12px;
+  background: lightgrey;
+  font-size: 20px;
+  font-weight: bold;
+  border-style: solid;
+  border-radius: 5px;
+  border-width: 3px;
+  border-color: darkblue;
+}
+
+ul.no-bullets {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}

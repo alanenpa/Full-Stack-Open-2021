@@ -29,7 +29,6 @@ const tokenExtractor = (request, response, next) => {
 
 const userExtractor = async (request, response, next) => {
   const token = request.token
-  console.log(request.method, request.originalUrl)
   let decodedToken = ''
   try {
     decodedToken = jwt.verify(token, process.env.SECRET)
