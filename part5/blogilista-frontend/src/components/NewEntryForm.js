@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 
 const NewEntryForm = ({ addEntry }) => {
-  const [title, setNewTitle] = useState('')
+  const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
 
   const createNewEntry = (event) => {
     event.preventDefault()
     addEntry({
-      title: title,
+      title: newTitle,
       author: newAuthor,
       url: newUrl,
     })
@@ -27,7 +27,7 @@ const NewEntryForm = ({ addEntry }) => {
           <input
             id='title'
             type="text"
-            value={title}
+            value={newTitle}
             onChange={(event) => setNewTitle(event.target.value)}
           />
         </div>

@@ -1,30 +1,32 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Form, Button } from 'react-bootstrap'
+
 
 const Loginform = (props) => (
-  <form onSubmit={props.handleLogin}>
-    <div>
-      username
-      <input
+  <Form onSubmit={props.handleLogin}>
+    <Form.Group>
+      <Form.Label>username:</Form.Label>
+      <Form.Control
         id='username'
         type="text"
         value={props.username}
         name="Username"
         onChange={props.handleUsername}
       />
-    </div>
-    <div>
-      password
-      <input
+      <Form.Label>password:</Form.Label>
+      <Form.Control
         id='password'
         type="text"
         value={props.password}
         name="Password"
         onChange={props.handlePassword}
       />
-    </div>
-    <button type="submit">login</button>
-  </form>
+      <Button type="submit">
+        login
+      </Button>
+    </Form.Group>
+  </Form>
 )
 
 Loginform.propTypes = {
