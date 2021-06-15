@@ -153,7 +153,7 @@ const parseSickLeave = (sickLeave: unknown): SickLeave | undefined => {
   }
 
   if (!("startDate" in sickLeave && "endDate" in sickLeave)) {
-    throw new Error("sick leave object doesn't include the required fields");
+    throw new Error("SickLeave object doesn't include the required fields");
   }
 
   const sickLeaveObject = sickLeave as { startDate: unknown; endDate: unknown };
@@ -171,7 +171,7 @@ const isHealthCheckRating = (param: any): param is HealthCheckRating => {
 
 const parseHealthCheckRating = (rating: unknown): HealthCheckRating => {
   if (rating === undefined || !isHealthCheckRating(rating)) {
-    throw new Error('incorrect or missing healthCareRating');
+    throw new Error('Incorrect or missing healthCareRating');
   }
   return rating;
 };
