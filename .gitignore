@@ -3,4 +3,6 @@ node_modules/
 requests/
 workdir/
 part3/
+part10/
+part11/
 .env
